@@ -27,7 +27,17 @@ sed -i -e "s/const hello_url = .*/const hello_url = '$url\/hello';/"  -e "s/cons
 aws s3 ls s3://$WEBSITE
 if [ $? -ne 0 ] ; then
 	aws s3api create-bucket --bucket $WEBSITE --region $AWS_REGION  --create-bucket-configuration LocationConstraint=$AWS_REGION
-  	aws s3api put-bucket-policy --bucket $WEBSITE --policy file://my-website-policy.json  
+        aws s3api put-bucket-policy --bucket $WEBSITE --policy file://my-website-policy.json
+        attempt=5
+	while [ $attempt -gt 0 ] ; do
+		echo "$(date) wait for s3 bucket to be ready to use"
+                sleep 1
+                aws s3 ls s3://$WEBSITE
+                if [ $? -eq 0 ] ; then
+                        attempt=0
+                fi
+                let attempt-$attempt-1
+        done
 fi
   
 aws s3 ls s3://$WEBSITE

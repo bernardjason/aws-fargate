@@ -19,9 +19,8 @@ aws cloudformation create-stack --stack-name $API --template-body file://api.yam
 attempt=60
 status=fred
 while [ $attempt -gt 0 -a $status != "ROLLBACK_FAILED" -a $status != "CREATE_COMPLETE" ] ; do
-	event=$(aws cloudformation describe-stack-events --stack-name $API --max-items 1 | jq -r '.StackEvents[0].ResourceStatus' )
-	echo $(date) [$event]
 	status=$(aws cloudformation describe-stacks --stack-name $API | jq -r '.Stacks[0].StackStatus')
+	echo $(date) [$status]
 	let attempt=$attempt-1
 	sleep 5
 done

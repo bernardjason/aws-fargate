@@ -31,10 +31,13 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller  \
 
 attempts=30
 while [ $attempts -gt 0 ] ; do
-	kubectl get deployments aws-load-balancer-controller -n kube-system
 	kubectl get svc -n kube-system aws-load-balancer-webhook-service
+	kubectl get deployments aws-load-balancer-controller -n kube-system 
+	kubectl get deployments aws-load-balancer-controller -n kube-system  | grep '2/2'
 	if [ $? -eq 0 ] ; then
 		attempts=0
+	else
+		sleep 5
 	fi
 	let attempts=$attempts-1
 done
