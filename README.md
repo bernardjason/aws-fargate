@@ -1,5 +1,6 @@
 # aws
 
+```code
 aws configure set default.region ${AWS_REGION}
 aws ecr create-repository --repository-name fargate-tutorial
 ./create_cluster.sh eks-demo Administrator
@@ -13,4 +14,6 @@ aws ecr create-repository --repository-name fargate-tutorial
 aws cloudformation delete-stack --stack-name eks-http-api
 kubectl delete ingress,deployment,service -n python-web --all
 eksctl delete cluster --name eks-demo
+
+```
 
