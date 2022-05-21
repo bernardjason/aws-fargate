@@ -7,8 +7,9 @@ aws ecr create-repository --repository-name fargate-tutorial
 ./setup_fluent_bit.sh eks-demo
 (cd hello && ./create_app.sh)
 (cd world && ./create_app.sh)
-./setup_loadbalancer.sh
+./setup_loadbalancer.sh eks-demo
 ./create_api.sh 
+./create_website.sh <some unique s3 bucket name>
 
 
 aws cloudformation delete-stack --stack-name eks-http-api
