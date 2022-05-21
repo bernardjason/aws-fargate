@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Create VPC
+
+Parameters:
+  APIGWVPClinkSG:
+    Type: String
+    Description: APIGWVPClinkSG security group, pythonweb
+    Default: xsg-0b087468264b0511b
+  ListenerArn:
+    Type: String
+    Description: ListenerArn
+    Default: xxxarn:aws:elasticloadbalancing:eu-west-2:975820831807:listener/app/k8s-pythonwe-pythonwe-feeb382b54/98913e50d131974e/40b2b94fd0dc2f46
+
+Resources:
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: HttpApiHelloWorldEks
+      ProtocolType: HTTP
+
+  MyVpcLink:
+    Type: AWS::ApiGatewayV2::VpcLink
+    Properties:
+      Name: private-apigw-vpclink
+      SecurityGroupIds:
+        - !Ref APIGWVPClinkSG
+      SubnetIds:
+        - !ImportValue PrivateSubnetOne
+        - !ImportValue PrivateSubnetTwo
+
+  HttpApiRouteWorld:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      OperationName: HttpApiWorld
+      RouteKey: 'ANY /world'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref Integration
+
+  HttpApiRouteHello:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      OperationName: HttpApiHello
+      RouteKey: 'ANY /hello'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref Integration
+
+  Integration:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref HttpApi
+      Description: Http API HelloWorld
+      IntegrationType: HTTP_PROXY
+      ConnectionType: VPC_LINK
+      ConnectionId:
+        !Ref MyVpcLink
+      IntegrationUri:
+        !Ref ListenerArn
+      IntegrationMethod: ANY
+      PayloadFormatVersion: 1.0
+
+  APIStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: $default
+      AutoDeploy: true
+      ApiId: !Ref HttpApi
+

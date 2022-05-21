@@ -1,0 +1,38 @@
+<html>
+<body>
+<h1>hello from ekshosted apis</h1>
+
+<p id="hello">from hello api</p>
+<p id="world">from world api</p>
+
+<p>hit refresh to call api's again</p>
+<button onclick="update()">refresh</button>
+
+
+<script>
+
+function update() {
+	const hello = new XMLHttpRequest();
+	const hello_url = 'https://p2wjh6m1w2.execute-api.eu-west-2.amazonaws.com/hello';
+	hello.open("GET", hello_url);
+	hello.send();
+	const world = new XMLHttpRequest();
+	const world_url = 'https://p2wjh6m1w2.execute-api.eu-west-2.amazonaws.com/world';
+	world.open("GET", world_url);
+	world.send();
+	
+	hello.onload = (e) => {
+    	document.getElementById("hello").innerHTML = hello.response;
+	}
+	world.onload = (e) => {
+    	document.getElementById("world").innerHTML = world.response;
+	}
+}
+
+update();
+
+
+</script>
+
+</body>
+<html>

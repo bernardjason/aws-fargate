@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: public-python-web-world
+  namespace: python-web
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /world
+            backend:
+              serviceName: python-web-world
+              servicePort: 80
+          - path: /hello
+            backend:
+              serviceName: python-web
+              servicePort: 80
