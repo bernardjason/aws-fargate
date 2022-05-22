@@ -12,7 +12,15 @@ Cost will be about a few pounds when uusing for a couple of hours.
 
 (architecture diagram to follow....)
 
-I've assumed you are using a user with Admin access and not the root account. Below assumes user Administrator.
+First of all create the VPC/EC2 instance using
+
+https://github.com/bernardjason/aws-fargate/blob/main/amazon-eks-vpc-private-subnets.yaml
+
+This can be done via AWS console cloudformation screen or cli if you've got that installed elsewhere.
+
+Once EC2 created and ready log onto hose and do the below steps.
+
+I've assumed you are using a user with Admin access and not the root account. Below assumes user is called Administrator.
 
 ```code
 aws configure set default.region ${AWS_REGION}
@@ -27,6 +35,8 @@ aws ecr create-repository --repository-name fargate-tutorial
 ```
 
 sometimes the loadbalancer isn't ready causing create_api.sh step to fail. Go into cloudformation on console and delete and try again.
+
+the create_website.sh script creates a simple S3 website to call the 2 rest api's.
 
 to cleanup
 ```commandline
