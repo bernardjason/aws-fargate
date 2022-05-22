@@ -5,7 +5,21 @@ lbal=$(aws elbv2 describe-load-balancers --query 'LoadBalancers[*].LoadBalancerA
 
 listener=$(aws elbv2 describe-listeners --load-balancer-arn  ${lbal} --query "Listeners[*].ListenerArn" | grep arn | sed -e "s/ //g" -e 's/"//g')
 
-echo $sg ${listener}
+echo "Found security group $sg  and listener ${listener}"
+
+echo "Check security group"
+echo $sg | grep 'sg-'
+if [ $? -ne 0 ] ; then
+	echo "Check if loadbalancer ready and try again."
+	exit 1
+fi
+
+echo "Check listener"
+echo $listener} | grep 'arn.*listener'
+if [ $? -ne 0 ] ; then
+	echo "Listener check failed, check if loadbalancer ready and try again."
+	exit 1
+fi
 
 API="eks-http-api"
 
