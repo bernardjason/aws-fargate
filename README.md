@@ -52,6 +52,6 @@ go into cloudformation from console and delete the vpc/ec2 stack
 See how to restrict cluster visibility.
 https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html
 
-Note as API GW as VPC link restrict to private the API and thus S3 website will still work
+Note as API GW has VPC link restrict K8S cluster access to private the APIGW and thus S3 website will still work
 
 
