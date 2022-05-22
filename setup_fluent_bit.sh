@@ -23,14 +23,18 @@ echo $rolename
 
 #kubectl apply -f fluentbit-config.yaml
 kubectl apply -f aws-logging-cloudwatch-configmap.yaml
+sleep 2
 
 kubectl -n aws-observability get cm
 
-#curl -o permissions.json https://raw.githubusercontent.com/aws-samples/amazon-eks-fluent-logging-examples/mainline/examples/fargate/cloudwatchlogs/permissions.json
-
-aws iam create-policy \
+aws iam list-policies --scope Local  --query 'Policies[*].{PolicyName:PolicyName}' | grep FluentBitEKSFargate
+if [ $? -ne 0 ] ; then
+	aws iam create-policy \
 	        --policy-name FluentBitEKSFargate \
 		        --policy-document file://permissions.json 
+else
+	echo "FluentBitEKSFargate policy already exists, wont recreate it"
+fi
 
 aws iam attach-role-policy \
 	        --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/FluentBitEKSFargate \

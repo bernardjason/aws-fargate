@@ -1,5 +1,9 @@
 # aws
 
+example project that will create a VPC, ec2 host that is used to create an kubernetes cluster.
+
+Cost will be about a few pounds when uusing for a couple of hours.
+
 ```code
 aws configure set default.region ${AWS_REGION}
 aws ecr create-repository --repository-name fargate-tutorial

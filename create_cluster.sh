@@ -84,16 +84,16 @@ eksctl utils associate-iam-oidc-provider \
 	--cluster $YOUR_CLUSTER_NAME \
 	--approve
 
-# sleep 5
 
-#echo "curl iam_policy.json"
-#curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.2.0/docs/install/iam_policy.json
-
-echo "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy"
-aws iam create-policy \
+aws iam list-policies --scope Local  --query 'Policies[*].{PolicyName:PolicyName}' | grep AWSLoadBalancerControllerIAMPolicy
+if [ $? -ne 0 ] ; then
+	echo "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy"
+	aws iam create-policy \
 	    --policy-name AWSLoadBalancerControllerIAMPolicy \
 	        --policy-document file://iam_policy.json
-
+else 
+	echo "Found AWSLoadBalancerControllerIAMPolicy already exists, wont attempt to create a new one"
+fi
 
 echo "eksctl create iamserviceaccount"
 eksctl create iamserviceaccount \
@@ -104,24 +104,6 @@ eksctl create iamserviceaccount \
 	--override-existing-serviceaccounts \
 	--approve
 
-
-#echo "helm repo add eks https://aws.github.io/eks-charts"
-#helm repo add eks https://aws.github.io/eks-charts
-#
-#echo "helm repo update"
-#helm repo update
-#
-#echo "helm install aws-load-balancer-controller eks/aws-load-balancer-controller"
-#
-#helm install aws-load-balancer-controller eks/aws-load-balancer-controller  \
-#-n kube-system \
-#--set clusterName=$YOUR_CLUSTER_NAME         \
-#--set serviceAccount.create=false  \
-#--set region=$AWS_REGION   \
-#--set vpcId=$VPCID  \
-#--set serviceAccount.name=aws-load-balancer-controller   
-#
-# sleep 5
 
 echo "Fix console"
 
