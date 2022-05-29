@@ -1,6 +1,6 @@
 # aws fargate hello world
 
-Example project that will create a VPC, ec2 host that is used to create an kubernetes cluster.
+Example project that will create a VPC, ec2 host that is used to create a kubernetes cluster.
 
 Cobbled together from docs, workshops and examples.
 
@@ -8,7 +8,7 @@ Watch a condensed cluster, api and website creation
 
 https://youtu.be/JO8drfZPWcg
 
-Cost will be about a few pounds when uusing for a couple of hours.
+Cost will be about a few pounds when using for a couple of hours.
 
 ![Alt text](screenshots/arch.png?raw=true)
 
@@ -20,7 +20,7 @@ This can be done via AWS console cloudformation screen or cli if you've got that
 
 Once EC2 created and ready log onto hose and do the below steps.
 
-I've assumed you are using a user with Admin access and not the root account. Below assumes user is called Administrator.
+I've assumed you are using an IAM user with Admin access and not the root account. Below assumes user is Administrator.
 
 Log onto the EC2 using console
 ![Alt text](screenshots/instance.png?raw=true"use console to logon to ec2")
