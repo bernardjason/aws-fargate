@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: python-web
+  name: python-web-hello
   namespace: python-web
 spec:
   selector:
-    app: python-web
+    app: python-web-hello
   type: NodePort
   ports:
   - protocol: TCP

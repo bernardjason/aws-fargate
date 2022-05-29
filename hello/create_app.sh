@@ -16,12 +16,12 @@ if [ $? -ne 0 ] ; then
 fi
 
 VERSION=hello-7
-sed -i "s/image: .*/image: $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com\/fargate-tutorial:$VERSION/" kubernetes/deployment.yaml
-docker build -t fargate-tutorial:${VERSION} .
-docker tag fargate-tutorial:${VERSION} $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/fargate-tutorial:${VERSION}
+sed -i "s/image: .*/image: $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com\/eks-fargate:$VERSION/" kubernetes/deployment.yaml
+docker build -t eks-fargate:${VERSION} .
+docker tag eks-fargate:${VERSION} $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/eks-fargate:${VERSION}
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
-docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/fargate-tutorial:${VERSION}
+docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/eks-fargate:${VERSION}
 cd kubernetes
 kubectl apply -f namespace.yaml
 kubectl apply -f service.yaml

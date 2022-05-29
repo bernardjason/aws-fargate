@@ -18,7 +18,11 @@ spec:
     spec:
       containers:
       - name: python-web-world
-        image: .dkr.ecr..amazonaws.com/fargate-tutorial:world-7
+        image: .dkr.ecr..amazonaws.com/eks-fargate:world-7
         ports:
           - containerPort: 8080
-        resources: {}
+        resources:
+          limits:
+            cpu: 100m
+          requests:
+            cpu: 20m

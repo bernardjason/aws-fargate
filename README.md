@@ -10,9 +10,9 @@ https://youtu.be/JO8drfZPWcg
 
 Cost will be about a few pounds when uusing for a couple of hours.
 
-(architecture diagram to follow....)
+![Alt text](screenshots/arch.png?raw=true)
 
-First of all create the VPC/EC2 instance using
+First create the VPC/EC2 instance using
 
 https://github.com/bernardjason/aws-fargate/blob/main/amazon-eks-vpc-private-subnets.yaml
 
@@ -22,9 +22,25 @@ Once EC2 created and ready log onto hose and do the below steps.
 
 I've assumed you are using a user with Admin access and not the root account. Below assumes user is called Administrator.
 
+Log onto the EC2 using console
+![Alt text](screenshots/instance.png?raw=true"use console to logon to ec2")
+
+Switch users to ec2-user
+```commandline
+sudo su - ec2-user
+```
+
+checkout this project
+```commandline
+git clone https://github.com/bernardjason/aws-fargate.git
+cd aws-fargate
+```
+
+the following will create an ECR repository, then EKS cluster, Fargate profile,
+2 hello world apps, private loadbalancer, http api APIGW and an S3 website
 ```code
 aws configure set default.region ${AWS_REGION}
-aws ecr create-repository --repository-name fargate-tutorial
+aws ecr create-repository --repository-name eks-fargate
 ./create_cluster.sh eks-demo Administrator
 ./setup_fluent_bit.sh eks-demo
 (cd hello && ./create_app.sh)
@@ -33,8 +49,6 @@ aws ecr create-repository --repository-name fargate-tutorial
 ./create_api.sh 
 ./create_website.sh <some unique s3 bucket name>
 ```
-
-sometimes the loadbalancer isn't ready causing create_api.sh step to fail. Go into cloudformation on console and delete and try again.
 
 the create_website.sh script creates a simple S3 website to call the 2 rest api's.
 
@@ -54,4 +68,23 @@ https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html
 
 Note as API GW has VPC link restrict K8S cluster access the APIGW and thus S3 website will still work
 
+run the script
+```
+make_private.sh <cluster name>
+```
+this can take a few minutes to complete once shell script runs for kubectl commands to work again.
 
+will change cluster endpoint to private ip address and make sure the security group allows access from vpc to port 443 so kubectl etc work
+
+# other things...
+
+https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html
+https://docs.aws.amazon.com/eks/latest/userguide/metrics-server.html
+
+https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+
+```commandline
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl autoscale deployment python-web-hello -n python-web --cpu-percent=50 --min=1 --max=4
+kubectl autoscale deployment python-web-world -n python-web --cpu-percent=50 --min=1 --max=4
+```

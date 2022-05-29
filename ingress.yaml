@@ -9,6 +9,7 @@ metadata:
 #   alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/scheme: internal
     alb.ingress.kubernetes.io/healthcheck-path: /ping
+    alb.ingress.kubernetes.io/tags: EKS=EKSDEMO
 spec:
   rules:
     - http:
@@ -19,5 +20,5 @@ spec:
               servicePort: 80
           - path: /hello
             backend:
-              serviceName: python-web
+              serviceName: python-web-hello
               servicePort: 80

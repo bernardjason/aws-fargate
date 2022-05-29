@@ -1,24 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python-web
+  name: python-web-hello
   namespace: python-web
   labels:
-    app: python-web
+    app: python-web-hello
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: python-web
+      app: python-web-hello
   strategy: {}
   template:
     metadata:
       labels:
-        app: python-web
+        app: python-web-hello
     spec:
       containers:
-      - name: python-web
-        image: 975820831807.dkr.ecr.eu-west-2.amazonaws.com/fargate-tutorial:hello-6
+      - name: python-web-hello
+        image: .dkr.ecr..amazonaws.com/eks-fargate:hello-6
         ports:
           - containerPort: 8080
-        resources: {}
+        resources:
+          limits:
+            cpu: 100m
+          requests:
+            cpu: 20m

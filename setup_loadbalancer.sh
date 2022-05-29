@@ -29,7 +29,7 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller  \
  --set vpcId=$VPCID  \
  --set serviceAccount.name=aws-load-balancer-controller   
 
-attempts=30
+attempts=12
 while [ $attempts -gt 0 ] ; do
 	kubectl get svc -n kube-system aws-load-balancer-webhook-service
 	kubectl get deployments aws-load-balancer-controller -n kube-system 
@@ -37,9 +37,37 @@ while [ $attempts -gt 0 ] ; do
 	if [ $? -eq 0 ] ; then
 		attempts=0
 	else
-		sleep 5
+		sleep 10
 	fi
 	let attempts=$attempts-1
 done
 
 kubectl apply -f ingress.yaml
+echo "Wait for loadbalancer to be provisioned and active"
+
+sleep 2
+
+LBARN=""
+for i in `aws elbv2 describe-load-balancers --query 'LoadBalancers[*].LoadBalancerArn' --output text`; do 
+	aws elbv2 describe-tags --resource-arns $i --query 'TagDescriptions[*].Tags' | grep EKSDEMO > /dev/null 2>&1  ; 
+	if [ $? -eq 0 ] ; then
+		LBARN=$i
+	fi
+done
+if [ -z $LBARN ] ; then
+	echo "Could not find loadbalancer"
+	exit 1
+fi
+attempts=30
+while [ $attempts -gt 0 ] ; do
+	state=$(aws elbv2 describe-load-balancers --query 'LoadBalancers[*].State' --load-balancer-arns  $LBARN --output text)
+	echo "$(date) $LBARN	$state"
+	echo $state | grep -i active > /dev/null 2>&1
+	if [ $? -eq 0 ] ; then
+		echo "Loadbalancer is ready"
+		attempts=0
+	else
+		sleep 5
+	fi
+	let attempts=$attempts-1
+done
