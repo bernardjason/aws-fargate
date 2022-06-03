@@ -8,7 +8,9 @@ Watch a condensed cluster, api and website creation
 
 https://youtu.be/JO8drfZPWcg
 
-Cost will be about a few pounds when using for a couple of hours.
+Cost will be about a few pounds when using for a couple of hours. 
+
+***Make sure you delete anything you don't want to keep afterwards as it will incur a cost.***
 
 ![Alt text](screenshots/arch.png?raw=true)
 
