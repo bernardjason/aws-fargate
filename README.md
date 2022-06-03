@@ -23,7 +23,8 @@ Once EC2 created and ready log onto hose and do the below steps.
 I've assumed you are using an IAM user with Admin access and not the root account. Below assumes user is Administrator.
 
 Log onto the EC2 using console
-![Alt text](screenshots/instance.png?raw=true"use console to logon to ec2")
+
+<img src="https://github.com/bernardjason/aws-fargate/blob/main/screenshots/instance.png" width="512"></img>
 
 Switch users to ec2-user
 ```commandline
